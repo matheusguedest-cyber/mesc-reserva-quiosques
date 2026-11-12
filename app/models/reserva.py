@@ -8,6 +8,18 @@ class Reserva(db.Model):
 
     __tablename__ = "reservas"
 
+    __table_args__ = (
+        db.Index(
+            "uq_reserva_confirmada_quiosque_data",
+            "id_quiosque",
+            "data_reserva",
+            unique=True,
+            sqlite_where=db.text("status = 'confirmada'"),
+            postgresql_where=db.text("status = 'confirmada'")
+        ),
+    )
+
+
     id_reserva = db.Column(
         db.Integer,
         primary_key=True
