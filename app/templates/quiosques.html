@@ -1,8 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
@@ -18,36 +20,91 @@
 
     <main class="container py-5">
 
+        <!-- Mensagens de sucesso ou erro -->
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                {% for categoria, mensagem in mensagens %}
 
-{% with mensagens = get_flashed_messages(with_categories=true) %}
-    {% if mensagens %}
-        {% for categoria, mensagem in mensagens %}
-            <div class="alert alert-{{ categoria }} alert-dismissible fade show"
-                 role="alert">
+                    <div
+                        class="alert alert-{{ categoria }} alert-dismissible fade show"
+                        role="alert"
+                    >
+                        {{ mensagem }}
 
-                {{ mensagem }}
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Fechar"
+                        ></button>
+                    </div>
 
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"
-                        aria-label="Fechar">
-                </button>
-            </div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
 
-        <h1 class="mb-3">Disponibilidade de Quiosques</h1>
+        <h1 class="mb-3">
+            Disponibilidade de Quiosques
+        </h1>
 
         <p class="text-muted">
-            Selecione uma data para consultar os quiosques.
+            Consulte a disponibilidade e reserve um
+            quiosque do Clube de Campo MESC.
         </p>
 
-        <form method="GET" action="{{ url_for('quiosques.listar_quiosques') }}"
-              class="row g-3 mb-4">
+
+        <!-- Informações da janela semanal -->
+
+        {% if periodo_reservas %}
+
+            <div class="alert alert-info" role="status">
+
+                <h2 class="h6 mb-2">
+                    Período disponível para reservas
+                </h2>
+
+                <p class="mb-1">
+                    <strong>{{ periodo_reservas }}</strong>
+                </p>
+
+                <small>
+                    As reservas da semana são liberadas
+                    às terças-feiras, a partir das 00h,
+                    no horário de São Paulo.
+                </small>
+
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-warning" role="status">
+
+                <h2 class="h6 mb-2">
+                    Reservas temporariamente fechadas
+                </h2>
+
+                <p class="mb-0">
+                    A próxima janela de reservas abre
+                    terça-feira às 00h, no horário
+                    de São Paulo.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- Formulário de consulta -->
+
+        <form
+            method="GET"
+            action="{{ url_for('quiosques.listar_quiosques') }}"
+            class="row g-3 mb-4"
+        >
 
             <div class="col-md-6">
+
                 <label for="data" class="form-label">
                     Data desejada
                 </label>
@@ -58,86 +115,148 @@
                     name="data"
                     class="form-control"
                     value="{{ data_consulta }}"
+                    {% if data_minima %}
+                        min="{{ data_minima }}"
+                    {% endif %}
+                    {% if data_maxima %}
+                        max="{{ data_maxima }}"
+                    {% endif %}
+                    {% if not periodo_reservas %}
+                        disabled
+                    {% endif %}
                     required
                 >
+
+                <div class="form-text">
+                    Selecione uma data dentro do período
+                    permitido para reservas.
+                </div>
+
             </div>
 
+
             <div class="col-md-3 align-self-end">
-                <button type="submit"
-                        class="btn btn-primary w-100">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                    {% if not periodo_reservas %}
+                        disabled
+                    {% endif %}
+                >
                     Consultar
                 </button>
+
             </div>
 
         </form>
 
+
+        <!-- Mensagens de validação -->
+
         {% if erro %}
+
             <div class="alert alert-danger" role="alert">
                 {{ erro }}
             </div>
+
         {% endif %}
 
+
+        <!-- Resultado da consulta -->
+
         {% if quiosques is not none %}
+
+            <h2 class="h4 mb-3">
+                Quiosques encontrados
+            </h2>
 
             <div class="row g-3">
 
                 {% for quiosque in quiosques %}
 
                     <div class="col-md-6 col-lg-4">
+
                         <div class="card h-100 shadow-sm">
+
                             <div class="card-body">
 
-                                <h2 class="h5">
+                                <h3 class="h5">
                                     Quiosque {{ quiosque.numero }}
-                                </h2>
+                                </h3>
 
                                 <p>
                                     Capacidade:
                                     {{ quiosque.capacidade }} pessoas
                                 </p>
 
-                                <p>{{ quiosque.descricao or "" }}</p>
+                                <p>
+                                    {{ quiosque.descricao or "" }}
+                                </p>
+
 
                                 {% if quiosque.situacao == "disponivel" %}
+
                                     <span class="badge bg-success">
                                         Disponível
                                     </span>
-<form method="POST"
-      action="{{ url_for('quiosques.reservar_quiosque') }}"
-      class="mt-3">
 
-    <input type="hidden"
-           name="csrf_token"
-           value="{{ csrf_token() }}">
 
-    <input type="hidden"
-           name="id_quiosque"
-           value="{{ quiosque.id_quiosque }}">
+                                    <!-- Formulário de reserva -->
 
-    <input type="hidden"
-           name="data_reserva"
-           value="{{ data_consulta }}">
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('quiosques.reservar_quiosque') }}"
+                                        class="mt-3"
+                                    >
 
-    <button type="submit"
-            class="btn btn-success w-100">
-        Reservar quiosque
-    </button>
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
 
-</form>
+                                        <input
+                                            type="hidden"
+                                            name="id_quiosque"
+                                            value="{{ quiosque.id_quiosque }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="data_reserva"
+                                            value="{{ data_consulta }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success w-100"
+                                        >
+                                            Reservar quiosque
+                                        </button>
+
+                                    </form>
+
 
                                 {% elif quiosque.situacao == "ocupado" %}
+
                                     <span class="badge bg-danger">
                                         Ocupado
                                     </span>
 
+
                                 {% else %}
+
                                     <span class="badge bg-secondary">
                                         Indisponível
                                     </span>
+
                                 {% endif %}
 
                             </div>
+
                         </div>
+
                     </div>
 
                 {% endfor %}
@@ -146,15 +265,22 @@
 
         {% endif %}
 
-        <a href="{{ url_for('associados.area_associado') }}"
-           class="btn btn-outline-secondary mt-4">
+
+        <!-- Retorno à área do associado -->
+
+        <a
+            href="{{ url_for('associados.area_associado') }}"
+            class="btn btn-outline-secondary mt-4"
+        >
             Voltar à área do associado
         </a>
 
     </main>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 </body>
 </html>

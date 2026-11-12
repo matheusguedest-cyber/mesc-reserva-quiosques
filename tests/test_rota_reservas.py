@@ -25,7 +25,7 @@ def autenticar_cliente(cliente):
         sessao["_fresh"] = True
 
 
-def test_reserva_sem_autenticacao(app, cliente):
+def test_reserva_sem_autenticacao(app, cliente, data_atual_controlada):
     id_quiosque = preparar_quiosque(app)
 
     resposta = cliente.post(
@@ -33,7 +33,7 @@ def test_reserva_sem_autenticacao(app, cliente):
         data={
             "id_quiosque": str(id_quiosque),
             "data_reserva": (
-                date.today() + timedelta(days=10)
+                date(2026, 11, 20)
             ).isoformat()
         }
     )
@@ -42,7 +42,7 @@ def test_reserva_sem_autenticacao(app, cliente):
     assert resposta.status_code == 400
 
 
-def test_reserva_sem_csrf(app, cliente):
+def test_reserva_sem_csrf(app, cliente, data_atual_controlada):
     id_quiosque = preparar_quiosque(app)
     autenticar_cliente(cliente)
 
@@ -51,7 +51,7 @@ def test_reserva_sem_csrf(app, cliente):
         data={
             "id_quiosque": str(id_quiosque),
             "data_reserva": (
-                date.today() + timedelta(days=10)
+                date(2026, 11, 20)
             ).isoformat()
         }
     )
@@ -59,11 +59,11 @@ def test_reserva_sem_csrf(app, cliente):
     assert resposta.status_code == 400
 
 
-def test_reserva_com_sucesso(app, cliente):
+def test_reserva_com_sucesso(app, cliente, data_atual_controlada):
     id_quiosque = preparar_quiosque(app)
     autenticar_cliente(cliente)
 
-    data_futura = date.today() + timedelta(days=10)
+    data_futura = date(2026, 11, 20)
 
     # Acessa a página para obter o token CSRF.
     resposta_get = cliente.get(
@@ -119,11 +119,11 @@ def test_reserva_com_sucesso(app, cliente):
         assert reserva.id_associado == 101
 
 
-def test_reserva_anonima_com_csrf_valido(app, cliente):
+def test_reserva_anonima_com_csrf_valido(app, cliente, data_atual_controlada):
     from bs4 import BeautifulSoup
 
     id_quiosque = preparar_quiosque(app)
-    data_futura = date.today() + timedelta(days=10)
+    data_futura = date(2026, 11, 20)
 
     # Obtém um token CSRF válido sem autenticar o usuário.
     resposta_get = cliente.get("/login")
@@ -158,13 +158,13 @@ def test_reserva_anonima_com_csrf_valido(app, cliente):
         assert db.session.query(Reserva).count() == 0
 
 
-def test_reserva_duplicada_pela_rota(app, cliente):
+def test_reserva_duplicada_pela_rota(app, cliente, data_atual_controlada):
     from bs4 import BeautifulSoup
 
     id_quiosque = preparar_quiosque(app)
     autenticar_cliente(cliente)
 
-    data_futura = date.today() + timedelta(days=10)
+    data_futura = date(2026, 11, 20)
 
     resposta_get = cliente.get(
         "/quiosques",

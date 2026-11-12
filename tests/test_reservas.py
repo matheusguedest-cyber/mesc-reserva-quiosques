@@ -23,9 +23,9 @@ def quiosque_teste(app):
         return quiosque.id_quiosque
 
 
-def test_criar_reserva_com_sucesso(app, quiosque_teste):
+def test_criar_reserva_com_sucesso(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
-        data_futura = date.today() + timedelta(days=10)
+        data_futura = date(2026, 11, 20)
 
         reserva = criar_reserva(
             id_associado=101,
@@ -40,9 +40,9 @@ def test_criar_reserva_com_sucesso(app, quiosque_teste):
         assert reserva.status == "confirmada"
 
 
-def test_impedir_reserva_duplicada(app, quiosque_teste):
+def test_impedir_reserva_duplicada(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
-        data_futura = date.today() + timedelta(days=10)
+        data_futura = date(2026, 11, 20)
 
         criar_reserva(
             id_associado=101,
@@ -69,9 +69,9 @@ def test_impedir_reserva_duplicada(app, quiosque_teste):
         assert quantidade == 1
 
 
-def test_impedir_reserva_data_passada(app, quiosque_teste):
+def test_impedir_reserva_data_passada(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
-        data_passada = date.today() - timedelta(days=1)
+        data_passada = date(2026, 11, 16)
 
         with pytest.raises(
             ErroReserva,
@@ -84,7 +84,7 @@ def test_impedir_reserva_data_passada(app, quiosque_teste):
             )
 
 
-def test_impedir_reserva_quiosque_inativo(app, quiosque_teste):
+def test_impedir_reserva_quiosque_inativo(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
         quiosque = db.session.get(Quiosque, quiosque_teste)
         quiosque.status = "inativo"
@@ -97,11 +97,11 @@ def test_impedir_reserva_quiosque_inativo(app, quiosque_teste):
             criar_reserva(
                 id_associado=101,
                 id_quiosque=quiosque_teste,
-                data_reserva=date.today() + timedelta(days=10)
+                data_reserva=date(2026, 11, 20)
             )
 
 
-def test_impedir_reserva_associado_inativo(app, quiosque_teste):
+def test_impedir_reserva_associado_inativo(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
         associado = db.session.get(Associado, 101)
         associado.status = "inativo"
@@ -114,13 +114,13 @@ def test_impedir_reserva_associado_inativo(app, quiosque_teste):
             criar_reserva(
                 id_associado=101,
                 id_quiosque=quiosque_teste,
-                data_reserva=date.today() + timedelta(days=10)
+                data_reserva=date(2026, 11, 20)
             )
 
 
-def test_reserva_cancelada_nao_bloqueia(app, quiosque_teste):
+def test_reserva_cancelada_nao_bloqueia(app, quiosque_teste, data_atual_controlada):
     with app.app_context():
-        data_futura = date.today() + timedelta(days=10)
+        data_futura = date(2026, 11, 20)
 
         reserva_cancelada = Reserva(
             id_associado=101,
