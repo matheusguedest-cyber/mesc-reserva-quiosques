@@ -1,10 +1,9 @@
 
-from datetime import date
-
 from sqlalchemy.exc import IntegrityError
 
 from app.extensions import db
 from app.models import Associado, Quiosque, Reserva
+from app.services.janela_reservas import validar_data_reserva
 
 
 class ErroReserva(Exception):
@@ -19,16 +18,11 @@ def criar_reserva(id_associado, id_quiosque, data_reserva):
     Retorna a reserva criada ou lança ErroReserva.
     """
 
-    # 1. Validar a data informada
-    if not isinstance(data_reserva, date) or isinstance(
-        data_reserva, __import__("datetime").datetime
-    ):
-        raise ErroReserva("A data informada é inválida.")
+    # 1. Validar a data e a janela semanal de reservas
+    data_permitida, mensagem_erro = validar_data_reserva(data_reserva)
 
-    if data_reserva < date.today():
-        raise ErroReserva(
-            "Não é permitido reservar datas anteriores à data atual."
-        )
+    if not data_permitida:
+        raise ErroReserva(mensagem_erro)
 
     # 2. Validar o associado
     associado = db.session.get(Associado, id_associado)
