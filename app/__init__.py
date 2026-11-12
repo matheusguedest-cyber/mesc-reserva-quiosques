@@ -45,6 +45,9 @@ def create_app():
     from app.routes.associados import associados_bp
     app.register_blueprint(associados_bp)
 
+    from app.routes.quiosques import quiosques_bp
+    app.register_blueprint(quiosques_bp)
+
     @app.route("/")
     def inicio():
         return "Sistema MESC - Reserva de Quiosques funcionando!"
