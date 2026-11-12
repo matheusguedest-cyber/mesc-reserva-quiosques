@@ -74,6 +74,21 @@
               name="csrf_token"
               value="{{ csrf_token() }}"
             >
+            <div class="mt-4 mb-3">
+
+            <h2 class="h5">Serviços disponíveis</h2>
+
+            <p>
+               Consulte a disponibilidade dos quiosques
+               para a data desejada.
+            </p>
+
+            <a href="{{ url_for('quiosques.listar_quiosques') }}"
+               class="btn btn-primary">
+               Consultar Quiosques
+            </a>
+
+            </div>
 
            <button
             type="submit"

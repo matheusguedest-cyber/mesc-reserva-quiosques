@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Quiosques - Clube de Campo MESC</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+    <main class="container py-5">
+
+        <h1 class="mb-3">Disponibilidade de Quiosques</h1>
+
+        <p class="text-muted">
+            Selecione uma data para consultar os quiosques.
+        </p>
+
+        <form method="GET" action="{{ url_for('quiosques.listar_quiosques') }}"
+              class="row g-3 mb-4">
+
+            <div class="col-md-6">
+                <label for="data" class="form-label">
+                    Data desejada
+                </label>
+
+                <input
+                    type="date"
+                    id="data"
+                    name="data"
+                    class="form-control"
+                    value="{{ data_consulta }}"
+                    required
+                >
+            </div>
+
+            <div class="col-md-3 align-self-end">
+                <button type="submit"
+                        class="btn btn-primary w-100">
+                    Consultar
+                </button>
+            </div>
+
+        </form>
+
+        {% if erro %}
+            <div class="alert alert-danger" role="alert">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        {% if quiosques is not none %}
+
+            <div class="row g-3">
+
+                {% for quiosque in quiosques %}
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+
+                                <h2 class="h5">
+                                    Quiosque {{ quiosque.numero }}
+                                </h2>
+
+                                <p>
+                                    Capacidade:
+                                    {{ quiosque.capacidade }} pessoas
+                                </p>
+
+                                <p>{{ quiosque.descricao or "" }}</p>
+
+                                {% if quiosque.situacao == "disponivel" %}
+                                    <span class="badge bg-success">
+                                        Disponível
+                                    </span>
+
+                                {% elif quiosque.situacao == "ocupado" %}
+                                    <span class="badge bg-danger">
+                                        Ocupado
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Indisponível
+                                    </span>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        <a href="{{ url_for('associados.area_associado') }}"
+           class="btn btn-outline-secondary mt-4">
+            Voltar à área do associado
+        </a>
+
+    </main>
+
+</body>
+</html>
