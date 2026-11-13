@@ -1,8 +1,10 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -53,53 +55,67 @@
 
                 <hr>
 
-                <h3 class="h5">
+                <h3 class="h5 mb-3">
                     Reserva de Quiosques
                 </h3>
 
                 <p class="text-secondary">
-                    Em breve, você poderá consultar
-                    a disponibilidade dos quiosques
-                    e realizar suas reservas.
+                    Consulte a disponibilidade dos quiosques,
+                    realize novas reservas e acompanhe
+                    suas reservas cadastradas.
                 </p>
-                
-                
-             <form
-              method="POST"
-              action="{{ url_for('autenticacao.logout') }}"
-              class="mt-4"
-             >
-             <input
-              type="hidden"
-              name="csrf_token"
-              value="{{ csrf_token() }}"
-            >
-            <div class="mt-4 mb-3">
 
-            <h2 class="h5">Serviços disponíveis</h2>
+                <div class="mt-4 mb-4">
 
-            <p>
-               Consulte a disponibilidade dos quiosques
-               para a data desejada.
-            </p>
+                    <h4 class="h6 mb-3">
+                        Serviços disponíveis
+                    </h4>
 
-            <a href="{{ url_for('quiosques.listar_quiosques') }}"
-               class="btn btn-primary">
-               Consultar Quiosques
-            </a>
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <a
+                            href="{{ url_for('quiosques.listar_quiosques') }}"
+                            class="btn btn-primary"
+                        >
+                            Consultar Quiosques
+                        </a>
+
+                        <a
+                            href="{{ url_for('associados.minhas_reservas') }}"
+                            class="btn btn-success"
+                        >
+                            Minhas Reservas
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('autenticacao.logout') }}"
+                    class="mt-4"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token() }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger"
+                    >
+                        Sair da conta
+                    </button>
+
+                </form>
 
             </div>
 
-           <button
-            type="submit"
-            class="btn btn-outline-danger"
-           >
-           Sair da conta
-           </button>
-           </form>
-
-
-            </div>
         </div>
 
     </main>
