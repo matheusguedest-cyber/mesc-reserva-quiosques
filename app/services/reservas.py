@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from app.extensions import db
 from app.models import Associado, Quiosque, Reserva
 from app.services.janela_reservas import validar_data_reserva
+from app.services import janela_reservas
 
 
 class ErroReserva(Exception):
@@ -75,3 +76,74 @@ def criar_reserva(id_associado, id_quiosque, data_reserva):
         ) from None
 
     return nova_reserva
+
+
+def listar_reservas_associado(id_associado):
+    """
+    Retorna as reservas de um associado.
+
+    Inclui reservas confirmadas e canceladas,
+    ordenadas pela data da reserva, da mais
+    recente para a mais antiga.
+    """
+
+    reservas = (
+        db.session.query(Reserva)
+        .filter(
+            Reserva.id_associado == id_associado
+        )
+        .order_by(
+            Reserva.data_reserva.desc(),
+            Reserva.id_reserva.desc()
+        )
+        .all()
+    )
+
+    return reservas
+
+
+def cancelar_reserva(id_reserva, id_associado):
+    """
+    Cancela uma reserva pertencente ao associado.
+
+    O cancelamento é permitido somente
+    até o dia anterior à data reservada.
+
+    Retorna a reserva atualizada ou
+    lança ErroReserva.
+    """
+
+    # 1. Localizar a reserva
+    reserva = db.session.get(Reserva, id_reserva)
+
+    if reserva is None:
+        raise ErroReserva(
+            "Reserva não encontrada."
+        )
+
+    # 2. Verificar o proprietário
+    if reserva.id_associado != id_associado:
+        raise ErroReserva(
+            "Você não possui permissão para cancelar esta reserva."
+        )
+
+    # 3. Verificar o status
+    if reserva.status != "confirmada":
+        raise ErroReserva(
+            "Esta reserva não está confirmada."
+        )
+
+    # 4. Validar o prazo de cancelamento
+    data_atual = janela_reservas.obter_data_atual()
+
+    if reserva.data_reserva <= data_atual:
+        raise ErroReserva(
+            "O cancelamento só é permitido até o dia anterior à reserva."
+        )
+
+    # 5. Atualizar o status
+    reserva.status = "cancelada"
+
+    db.session.commit()
+
+    return reserva
