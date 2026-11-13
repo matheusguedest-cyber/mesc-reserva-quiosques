@@ -1,12 +1,51 @@
 
+:root {
+    --mesc-azul: #174D6B;
+    --mesc-azul-escuro: #103A52;
+    --mesc-amarelo: #F7E600;
+    --mesc-vermelho: #C92328;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f7fa;
+    color: #243746;
 }
 
 .login-card {
     width: 100%;
     max-width: 440px;
-    border-radius: 16px;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.login-header {
+    background-color: var(--mesc-azul);
+    text-align: center;
+    padding: 30px 20px 24px;
+    border-bottom: 5px solid var(--mesc-amarelo);
+}
+
+.login-logo {
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 50%;
+    padding: 6px;
+    margin-bottom: 14px;
+}
+
+.login-header h1 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.login-header p {
+    color: #f2f5f7;
+    margin-bottom: 0;
 }
 
 .form-label {
@@ -17,12 +56,285 @@ body {
     min-height: 48px;
 }
 
+.form-control:focus {
+    border-color: var(--mesc-azul);
+    box-shadow: 0 0 0 0.2rem rgba(23, 77, 107, 0.18);
+}
+
 .btn {
     min-height: 48px;
     font-weight: 600;
 }
 
-.form-control:focus {
-    border-color: #198754;
-    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+.btn-mesc {
+    background-color: var(--mesc-azul);
+    border-color: var(--mesc-azul);
+    color: white;
+}
+
+.btn-mesc:hover,
+.btn-mesc:focus {
+    background-color: var(--mesc-azul-escuro);
+    border-color: var(--mesc-azul-escuro);
+    color: white;
+}
+
+.btn-mesc:focus-visible {
+    outline: 3px solid var(--mesc-amarelo);
+    outline-offset: 3px;
+}
+
+@media (max-width: 576px) {
+    .login-card {
+        border-radius: 14px;
+    }
+
+    .login-header {
+        padding: 24px 16px 20px;
+    }
+
+    .login-logo {
+        width: 96px;
+        height: 96px;
+    }
+}
+
+
+/* Área do Associado */
+
+.associado-card {
+    max-width: 760px;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.associado-header {
+    background-color: var(--mesc-azul);
+    color: white;
+    padding: 24px;
+    border-bottom: 5px solid var(--mesc-amarelo);
+}
+
+.associado-logo {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+.associado-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.associado-header p {
+    margin-bottom: 0;
+    color: #f2f5f7;
+}
+
+.associado-info {
+    background-color: #f4f7fa;
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.associado-info p {
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.associado-info p:last-child {
+    margin-bottom: 0;
+}
+
+.servicos-card {
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.btn-mesc-outline {
+    border: 2px solid var(--mesc-azul);
+    color: var(--mesc-azul);
+    background-color: white;
+}
+
+.btn-mesc-outline:hover,
+.btn-mesc-outline:focus {
+    background-color: var(--mesc-azul);
+    color: white;
+}
+
+@media (max-width: 576px) {
+    .associado-header {
+        padding: 20px;
+    }
+
+    .associado-logo {
+        width: 64px;
+        height: 64px;
+    }
+
+    .servicos-card .btn {
+        width: 100%;
+    }
+}
+
+
+/* Consulta e Reserva de Quiosques */
+
+.quiosques-painel {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.quiosques-header {
+    background-color: var(--mesc-azul);
+    color: white;
+    padding: 24px;
+    border-bottom: 5px solid var(--mesc-amarelo);
+}
+
+.quiosques-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.quiosques-header p {
+    color: #f2f5f7;
+    margin-bottom: 0;
+}
+
+.quiosques-logo {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+.quiosque-card {
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.quiosque-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+.quiosque-card h3 {
+    color: var(--mesc-azul);
+    font-weight: 700;
+}
+
+.consulta-quiosques {
+    background-color: #f4f7fa;
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.acessibilidade-controles {
+    background-color: #f4f7fa;
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.acessibilidade-controles .btn {
+    min-height: 44px;
+}
+
+@media (max-width: 576px) {
+    .quiosques-header {
+        padding: 20px;
+    }
+
+    .quiosques-logo {
+        width: 64px;
+        height: 64px;
+    }
+
+    .consulta-quiosques {
+        padding: 16px;
+    }
+}
+
+
+/* Minhas Reservas */
+
+.reservas-painel {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.reservas-header {
+    background-color: var(--mesc-azul);
+    color: white;
+    padding: 24px;
+    border-bottom: 5px solid var(--mesc-amarelo);
+}
+
+.reservas-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.reservas-header p {
+    color: #f2f5f7;
+    margin-bottom: 0;
+}
+
+.reservas-logo {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    flex-shrink: 0;
+}
+
+.reserva-card {
+    border: 1px solid #e0e7ed;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.reserva-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+.reserva-card h3 {
+    color: var(--mesc-azul);
+    font-weight: 700;
+}
+
+.reserva-card p {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 576px) {
+    .reservas-header {
+        padding: 20px;
+    }
+
+    .reservas-logo {
+        width: 64px;
+        height: 64px;
+    }
+
+    .reserva-card .btn {
+        width: 100%;
+    }
 }
