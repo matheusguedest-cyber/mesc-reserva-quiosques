@@ -28,6 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
+      
       - name: Executar testes e cobertura
+        env:
+          SECRET_KEY: "chave-exclusiva-para-testes-automatizados"
         run: |
           python -m pytest --cov=app --cov-report=term-missing -q
+
