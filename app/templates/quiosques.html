@@ -20,6 +20,44 @@
 
     <main class="container py-5">
 
+        <!-- Controles de acessibilidade -->
+<div
+    class="d-flex flex-wrap justify-content-end
+           align-items-center gap-2 mb-4"
+    role="group"
+    aria-label="Controles de tamanho da fonte"
+>
+    <span class="me-2">
+        Tamanho do texto:
+    </span>
+
+    <button
+        type="button"
+        id="diminuir-fonte"
+        class="btn btn-outline-primary"
+        aria-label="Diminuir tamanho do texto"
+    >
+        A−
+    </button>
+
+    <button
+        type="button"
+        id="aumentar-fonte"
+        class="btn btn-outline-primary"
+        aria-label="Aumentar tamanho do texto"
+    >
+        A+
+    </button>
+
+    <button
+        type="button"
+        id="restaurar-fonte"
+        class="btn btn-outline-secondary"
+    >
+        Restaurar
+    </button>
+</div>
+
         <!-- Mensagens de sucesso ou erro -->
         {% with mensagens = get_flashed_messages(with_categories=true) %}
             {% if mensagens %}
@@ -281,6 +319,61 @@
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     ></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const raiz = document.documentElement;
 
+        const tamanhoPadrao = 100;
+        const tamanhoMinimo = 80;
+        const tamanhoMaximo = 150;
+        const incremento = 10;
+
+        const chave = "mesc-tamanho-fonte";
+
+        let tamanho = Number(
+            localStorage.getItem(chave)
+        );
+
+        if (!Number.isFinite(tamanho) ||
+            tamanho < tamanhoMinimo ||
+            tamanho > tamanhoMaximo) {
+            tamanho = tamanhoPadrao;
+        }
+
+        function aplicarTamanho() {
+            raiz.style.fontSize = tamanho + "%";
+            localStorage.setItem(chave, tamanho);
+        }
+
+        document
+            .getElementById("aumentar-fonte")
+            .addEventListener("click", function () {
+                tamanho = Math.min(
+                    tamanho + incremento,
+                    tamanhoMaximo
+                );
+                aplicarTamanho();
+            });
+
+        document
+            .getElementById("diminuir-fonte")
+            .addEventListener("click", function () {
+                tamanho = Math.max(
+                    tamanho - incremento,
+                    tamanhoMinimo
+                );
+                aplicarTamanho();
+            });
+
+        document
+            .getElementById("restaurar-fonte")
+            .addEventListener("click", function () {
+                tamanho = tamanhoPadrao;
+                aplicarTamanho();
+            });
+
+        aplicarTamanho();
+    });
+</script>
 </body>
 </html>
