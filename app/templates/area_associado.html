@@ -21,82 +21,97 @@
     >
 </head>
 
-<body class="bg-light">
+<body>
 
-    <main class="container py-5">
+    <main class="container py-4 py-md-5">
 
-        <div class="card shadow-sm border-0 mx-auto"
-             style="max-width: 700px;">
+        <div class="card shadow-sm border-0 mx-auto associado-card">
+
+            <header class="associado-header">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <img
+                        src="{{ url_for('static', filename='img/logo-mesc.png') }}"
+                        alt="Logotipo do Clube de Campo MESC"
+                        class="associado-logo"
+                    >
+
+                    <div>
+                        <h1>Portal do Associado</h1>
+                        <p>Clube de Campo MESC</p>
+                    </div>
+
+                </div>
+
+            </header>
 
             <div class="card-body p-4 p-md-5">
-
-                <h1 class="text-success fw-bold mb-3">
-                    MESC
-                </h1>
 
                 <h2 class="h4 mb-4">
                     Bem-vindo, {{ associado.nome }}!
                 </h2>
 
-                <p>
-                    <strong>Identificação:</strong>
-                    {{ associado.id_associado }}
-                </p>
+                <section class="associado-info mb-4"
+                         aria-label="Dados do associado">
 
-                <p>
-                    <strong>Número do título:</strong>
-                    {{ associado.numero_titulo }}
-                </p>
+                    <h3 class="h5 mb-3">
+                        Seus dados
+                    </h3>
 
-                <p>
-                    <strong>Situação cadastral:</strong>
-                    {{ associado.status }}
-                </p>
+                    <p>
+                        <strong>Identificação:</strong>
+                        {{ associado.id_associado }}
+                    </p>
 
-                <hr>
+                    <p>
+                        <strong>Número do título:</strong>
+                        {{ associado.numero_titulo }}
+                    </p>
 
-                <h3 class="h5 mb-3">
-                    Reserva de Quiosques
-                </h3>
+                    <p>
+                        <strong>Situação cadastral:</strong>
+                        {{ associado.status }}
+                    </p>
 
-                <p class="text-secondary">
-                    Consulte a disponibilidade dos quiosques,
-                    realize novas reservas e acompanhe
-                    suas reservas cadastradas.
-                </p>
+                </section>
 
-                <div class="mt-4 mb-4">
+                <section class="servicos-card mb-4"
+                         aria-label="Serviços disponíveis">
 
-                    <h4 class="h6 mb-3">
-                        Serviços disponíveis
-                    </h4>
+                    <h3 class="h5 mb-3">
+                        Reserva de Quiosques
+                    </h3>
 
-                    <div class="d-flex flex-wrap gap-2">
+                    <p class="text-secondary">
+                        Consulte a disponibilidade dos quiosques,
+                        realize novas reservas e acompanhe
+                        suas reservas cadastradas.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2 mt-4">
 
                         <a
                             href="{{ url_for('quiosques.listar_quiosques') }}"
-                            class="btn btn-primary"
+                            class="btn btn-mesc"
                         >
                             Consultar Quiosques
                         </a>
 
                         <a
                             href="{{ url_for('associados.minhas_reservas') }}"
-                            class="btn btn-success"
+                            class="btn btn-mesc-outline"
                         >
                             Minhas Reservas
                         </a>
 
                     </div>
 
-                </div>
-
-                <hr>
+                </section>
 
                 <form
                     method="POST"
                     action="{{ url_for('autenticacao.logout') }}"
-                    class="mt-4"
                 >
 
                     <input
