@@ -2,6 +2,7 @@
 import os
 
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from app.extensions import db, login_manager, csrf
 
@@ -12,10 +13,26 @@ def create_app():
 
     app = Flask(__name__)
 
+
+    if os.environ.get("TRUST_PROXY", "false").lower() == "true":
+        app.wsgi_app = ProxyFix(
+            app.wsgi_app,
+            x_for=1,
+            x_proto=1,
+            x_host=0,
+            x_port=0,
+            x_prefix=0
+        )
+
     app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+    app.config["SESSION_COOKIE_SECURE"] = (
+        os.environ.get("SESSION_COOKIE_SECURE", "false").lower()
+        == "true"
+    )
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "DATABASE_URL",
